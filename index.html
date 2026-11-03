@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>EDS Design Images — 项目组图预览</title>
+<style>
+:root{--bg:#F6F3ED;--card:#FFFDF8;--text:#121417;--muted:#6B6C6E;--accent:#8B6914;--accent-soft:#EFE8DC;--border:#D6D4CF;--sidebar:260px}
+*{box-sizing:border-box}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--text);min-height:100vh}
+.banner{background:#EFE8DC;color:#5C4A2A;padding:10px 20px;font-size:.82rem;border-bottom:1px solid var(--border);line-height:1.45}
+.shell{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:calc(100vh - 42px)}
+aside{border-right:1px solid var(--border);background:rgba(255,253,248,.92);position:sticky;top:0;height:100vh;overflow:auto;padding:18px 14px 28px}
+aside h1{font-size:1.05rem;margin:0 0 4px}
+aside .sub{color:var(--muted);font-size:.78rem;margin-bottom:14px;line-height:1.4}
+.proj-list{display:flex;flex-direction:column;gap:8px}
+.proj-btn{text-align:left;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--text);width:100%}
+.proj-btn:hover{border-color:#C4B89A}
+.proj-btn.active{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+.proj-btn .n{font-weight:600;font-size:.9rem;display:block}
+.proj-btn .m{color:var(--muted);font-size:.72rem;margin-top:3px}
+.chips{display:none;gap:8px;flex-wrap:wrap;padding:12px 20px;border-bottom:1px solid var(--border);background:rgba(246,243,237,.95);position:sticky;top:0;z-index:3}
+.chip{border:1px solid var(--border);background:var(--card);border-radius:999px;padding:6px 12px;font-size:.8rem;cursor:pointer}
+.chip.active{background:var(--accent-soft);border-color:var(--accent);color:#5C4A2A}
+main{padding:18px 22px 48px;min-width:0}
+.proj-head{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:16px}
+.proj-head h2{margin:0 0 6px;font-size:1.2rem}
+.proj-head .meta{color:var(--muted);font-size:.85rem;line-height:1.5}
+.proj-head a{color:var(--accent)}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+input,select,button{font:inherit}
+input,select{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:box-shadow .15s,transform .15s}
+.card:hover{box-shadow:0 8px 24px rgba(18,20,23,.08);transform:translateY(-1px)}
+.card picture,.card img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;background:#E8E4DC}
+.card .body{padding:12px 14px}
+.card .t{font-size:.88rem;margin:0 0 4px;word-break:break-all}
+.card .s{color:var(--muted);font-size:.75rem;line-height:1.4}
+.empty{color:var(--muted);padding:28px 8px}
+.gate{font-size:.75rem;color:#5C4A2A;background:#EFE8DC;border:1px solid #D6D4CF;border-radius:8px;padding:6px 10px;display:inline-block;margin-top:8px}
+dialog{border:none;border-radius:14px;padding:0;max-width:min(1100px,96vw);background:var(--card);color:var(--text)}
+dialog::backdrop{background:rgba(18,20,23,.5)}
+.lb{display:flex;flex-direction:column}
+.lb img{max-width:100%;max-height:72vh;object-fit:contain;background:#EFE8DC}
+.lb .info{padding:12px 16px;font-size:.85rem;color:var(--muted);line-height:1.5}
+.lb .actions{display:flex;gap:8px;padding:0 16px 14px;flex-wrap:wrap}
+.lb .actions button,.lb .actions a{background:#EFE8DC;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;cursor:pointer;text-decoration:none}
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  aside{display:none}
+  .chips{display:flex}
+}
+</style>
+</head>
+<body>
+<div class="banner">内部样本预览：按<strong>项目组图</strong>展示。当前有图项目：Varonis Offices – London（11 张）。图库 CDN 资源 ≤约 200KB。≠ 全库 80 图完成。版权归原设计方／摄影师；勿外发。Bunny 上传待密钥。</div>
+<div class="chips" id="chips"></div>
+<div class="shell">
+  <aside>
+    <h1>EDS Design Images</h1>
+    <div class="sub" id="asideSub">加载中…</div>
+    <div class="proj-list" id="projList"></div>
+  </aside>
+  <main>
+    <section class="proj-head" id="projectBox"></section>
+    <div class="filters">
+      <input id="q" placeholder="搜索文件名／空间类型／署名" style="min-width:240px"/>
+      <select id="space"><option value="">全部空间类型</option></select>
+    </div>
+    <div class="grid" id="grid"></div>
+  </main>
+</div>
+<dialog id="lb"><div class="lb">
+  <img id="lbImg" alt=""/>
+  <div class="info" id="lbInfo"></div>
+  <div class="actions"><button type="button" id="prev">上一张</button><button type="button" id="next">下一张</button><button type="button" id="close">关闭</button>
+  <a id="full" target="_blank" rel="noopener">CDN 图</a></div>
+</div></dialog>
+<script>
+let data=null, list=[], idx=0, activeProjectId=null;
+const grid=document.getElementById('grid'), q=document.getElementById('q'), space=document.getElementById('space');
+const lb=document.getElementById('lb');
+const projList=document.getElementById('projList'), chips=document.getElementById('chips');
+
+function projectImages(pid){return data.images.filter(im=>im.projectId===pid)}
+function projectById(pid){return data.projects.find(p=>p.id===pid)}
+
+function selectProject(pid){
+  activeProjectId=pid;
+  [...projList.querySelectorAll('.proj-btn')].forEach(b=>b.classList.toggle('active', b.dataset.id===pid));
+  [...chips.querySelectorAll('.chip')].forEach(b=>b.classList.toggle('active', b.dataset.id===pid));
+  const p=projectById(pid);
+  const imgs=projectImages(pid);
+  const avgCdn=imgs.length?Math.round(imgs.reduce((s,i)=>s+(i.bytes_cdn||0),0)/imgs.length):0;
+  document.getElementById('projectBox').innerHTML=p?`
+    <h2>${p.name}</h2>
+    <div class="meta">${p.country||''} / ${p.city||''} · 设计 ${p.designer||'—'} · 摄影 ${p.photographer||'—'}<br/>
+    来源 <a href="${p.sourceUrl||'#'}" target="_blank" rel="noopener">${p.sourceUrl||'—'}</a><br/>${p.notes||''}</div>
+    <div class="gate">本组 ${imgs.length} 张 · CDN 均约 ${(avgCdn/1024).toFixed(0)}KB · 闸门 ≤200KB · Bunny：待密钥（本预览用站内 CDN 图）</div>`
+    :`<h2>未选择项目</h2>`;
+  // rebuild space options for this project
+  const cur=space.value;
+  space.innerHTML='<option value="">全部空间类型</option>';
+  [...new Set(imgs.map(i=>i.spaceType).filter(Boolean))].forEach(s=>{
+    const o=document.createElement('option'); o.value=s; o.textContent=s; space.appendChild(o);
+  });
+  if([...space.options].some(o=>o.value===cur)) space.value=cur;
+  render();
+}
+
+function render(){
+  const term=q.value.trim().toLowerCase();
+  const sp=space.value;
+  list=projectImages(activeProjectId).filter(im=>{
+    if(sp && !(im.spaceType||'').includes(sp)) return false;
+    if(!term) return true;
+    return [im.filename,im.spaceType,im.photographer,im.status,im.usageRestriction].join(' ').toLowerCase().includes(term);
+  });
+  grid.innerHTML=list.map((im,i)=>`
+    <article class="card" data-i="${i}">
+      <picture>
+        <source type="image/webp" srcset="${im.previewSrc}"/>
+        <img loading="lazy" src="${im.previewSrcJpg||im.previewSrc}" alt="${im.filename}"/>
+      </picture>
+      <div class="body">
+        <p class="t">${im.filename}</p>
+        <p class="s">${im.spaceType||'—'} · 原图 ${im.width}×${im.height}<br/>CDN ${(im.bytes_cdn/1024).toFixed(0)}KB（原 ${((im.bytesOriginal||im.bytes)/1048576).toFixed(1)}MB）</p>
+      </div>
+    </article>`).join('')||'<p class="empty">此项目暂无匹配图片（结构已支持多项目；其它项目入库后会出现在左侧）。</p>';
+}
+
+function openAt(i){
+  idx=i; const im=list[idx]; if(!im) return;
+  const p=projectById(im.projectId);
+  document.getElementById('lbImg').src=im.previewSrcJpg||im.src||im.previewSrc;
+  document.getElementById('full').href=im.previewSrc||im.src;
+  document.getElementById('lbInfo').innerHTML=`<strong>${im.filename}</strong><br/>项目：${p?p.name:im.projectId}<br/>空间：${im.spaceType||'—'}<br/>摄影：${im.photographer||'—'}<br/>原图像素：${im.width}×${im.height} · 原文件 ${im.bytesOriginal||im.bytes} bytes<br/>CDN：${im.bytes_cdn} bytes（webp ${im.bytes_cdn_webp||'—'} / jpg ${im.bytes_cdn_jpg||'—'}）<br/>SHA256：${im.sha256||'—'}<br/>来源：<a href="${im.sourceUrl}" target="_blank" rel="noopener">原图 URL</a><br/>限制：${im.usageRestriction||'—'}<br/>状态：${im.status||'—'}`;
+  lb.showModal();
+}
+
+grid.addEventListener('click',e=>{const c=e.target.closest('.card'); if(c) openAt(+c.dataset.i)});
+document.getElementById('close').onclick=()=>lb.close();
+document.getElementById('prev').onclick=()=>openAt((idx-1+list.length)%list.length);
+document.getElementById('next').onclick=()=>openAt((idx+1)%list.length);
+q.oninput=render; space.onchange=render;
+
+fetch('/manifest.json').then(r=>r.json()).then(m=>{
+  data=m;
+  document.getElementById('asideSub').textContent=`${m.projects.length} 个项目 · ${m.images.length} 张图 · 更新 ${m.updatedAt}`;
+  const counts=Object.fromEntries(m.projects.map(p=>[p.id, projectImages(p.id).length]));
+  // sort: projects with images first
+  const ordered=[...m.projects].sort((a,b)=>(counts[b.id]||0)-(counts[a.id]||0));
+  projList.innerHTML=ordered.map(p=>`
+    <button type="button" class="proj-btn" data-id="${p.id}">
+      <span class="n">${p.name}</span>
+      <span class="m">${counts[p.id]||0} 张 · ${p.city||''} ${p.country||''}</span>
+    </button>`).join('');
+  chips.innerHTML=ordered.map(p=>`<button type="button" class="chip" data-id="${p.id}">${p.name}（${counts[p.id]||0}）</button>`).join('');
+  projList.onclick=e=>{const b=e.target.closest('.proj-btn'); if(b) selectProject(b.dataset.id)};
+  chips.onclick=e=>{const b=e.target.closest('.chip'); if(b) selectProject(b.dataset.id)};
+  const def=(m.ui&&m.ui.defaultProjectId)||ordered.find(p=>(counts[p.id]||0)>0)?.id||ordered[0]?.id;
+  if(def) selectProject(def);
+});
+</script>
+</body></html>
